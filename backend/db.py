@@ -1,10 +1,13 @@
-from supabase import create_client, Client
-url='https://nzviaqzmtjxaftppfyrn.supabase.co'
-key='sb_publishable_yGieFlaaPLEQPZrh-_OJYA_ddjnFiey'
-# sb_secret_Lp-pqG8i7_dVhlbOy-a9OQ_q5ZV3iIv
-supabase: Client = create_client(url, key)
-connection = supabase.schema("public")
-def auth(email,password):
-    data = (connection.schema("public").table("id_pass").select("*").eq("id", email).eq("password", password).execute()).data
-    print("DATA:",data)
-    return data[0]
+from django.conf import settings
+from supabase import create_client
+
+# initialize once
+supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+
+# def add(expense_data):
+#     a=(((supabase.table("expenses").select('*').execute()).data)[0])['amount']
+#     return a
+def add(expense_data):
+    response = supabase.table("expenses").insert(expense_data).execute()
+    return response.data
+
